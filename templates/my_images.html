@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3 class="text-center" id="imgs">My Images</h3>
+
+    <p><a href="/upload">Upload</a></p>
+    <p><a href="/">home page</a></p>
+
+<ul class="list-unstyled">
+    {% for image in images %}
+    <div class="each-image">
+      <li class="img-list">
+        <div class="row">
+          <div class="col-6 col-sm-3">
+            <div class="img-name text-center">{{ image.name }}</div>
+          <img 
+            controls id="image" 
+            src="{{ image.s3_path }}"
+            width="200" 
+            height="150">
+          </img>
+        </div>
+        <div class="col-6 col-sm-3 my-auto">
+          <div class='row'>
+            <div class="col-3 col-sm-3">
+              <button class="publish-btn btn btn-md" id="{{ image.image_id }}">{% if image.published %}Unpublish{% else %}Publish{% endif %}</button>
+            </div>
+          <div class="col-3 col-sm-3 offset-sm-1">
+            <form enctype="form-data" action="/image/{{image.image_id}}" method="DELETE">
+              <input type="hidden" name="delete-image" value="{{image.image_id}}">
+              <button class="btn btn-md" href="/image/delete/image.image_id>">delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </li>
+  </div>
+{% endfor %}
+</ul>
+
+<script src="/static/publish.js"></script>
+
+{% endblock content %}
+
