@@ -40,11 +40,11 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
     db.app = app
     db.init_app(app)
+    
+if __name__ == "__main__":
+    from server import app
     app.config["SQLALCHEMY_DATABASE_URI"] = "postgres:///image_repository"
     app.config["SQLALCHEMY_ECHO"] = False
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-if __name__ == "__main__":
-    from server import app
-    
     connect_to_db(app)
     db.create_all()

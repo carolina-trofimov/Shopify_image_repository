@@ -204,7 +204,7 @@ def logout():
 
     return redirect("/")
 
-    
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
@@ -213,6 +213,9 @@ if __name__ == "__main__":
     # make sure templates, etc. are not cached in debug mode
     app.jinja_env.auto_reload = app.debug
 
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgres:///image_repository"
+    app.config["SQLALCHEMY_ECHO"] = False
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     connect_to_db(app)
 
     # Use the DebugToolbar
