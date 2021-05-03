@@ -1,8 +1,15 @@
+from botocore.exceptions import ClientError
 from flask import Flask, render_template, redirect, request, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
+from jinja2 import StrictUndefined
+from helpers import allowed_file, delete_from_s3, delete_from_db, login_required, save_image_to_s3, save_image_to_db
+from flask_uploads import UploadSet, configure_uploads
 from model import connect_to_db, db, User, Image
+from os import environ
+import io
 import requests
 from sqlalchemy import and_, update
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = "123"
@@ -176,25 +183,24 @@ def publish(image_id):
 def delete_image(image_id):
     """Allow user to delete an image"""
 
-    image = Image.query.filter_by(image_id=image_id)
+    image = Image.query.filter_by(image_id=image_id).first()
     user_id = session["logged_in_user"]
 
-    if image.user.user_id != user_id:
-        flash("Cannot modify other people's images")
+    if not image:
+        flash("Image doesn't exist")
         return redirect("/")
 
     if image.user.user_id != session['logged_in_user']:
         flash("Cannot modify other people's images")
         return redirect("/")
+
     if user_id:
         # And user can delete any image. How do we check that its the user's image?
         image = Image.query.filter_by(image_id=image_id).one()
-
         delete_from_db(image)
         delete_from_s3(image.name)
 
         return redirect("/my-images")
-
 
 @app.route("/users", methods=["POST", "GET"])
 def all_users():
@@ -226,13 +232,14 @@ def profile(user_id):
 
     return render_template("profile.html", images=images, user=user, to_see=to_see)
 
-    
+
 @app.route("/logout")
+@login_required
 def logout():
     """Logout user."""
 
     del session["logged_in_user"]
-    flash("Logout successful.")
+    flash("Logout successful")
 
     return redirect("/")
 
