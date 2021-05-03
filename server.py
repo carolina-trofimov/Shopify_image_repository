@@ -195,6 +195,38 @@ def delete_image(image_id):
 
         return redirect("/my-images")
 
+
+@app.route("/users", methods=["POST", "GET"])
+def all_users():
+    """Show list of users to follow"""
+
+    logged_user_id = dict(session).get("logged_in_user", None)
+    user = User.query.filter_by(user_id=logged_user_id).first()
+    if user:
+        users = User.query.filter(user.email != user.email).all()
+
+    else:
+        users = User.query.all()
+    
+    return render_template("users.html", users=users, loggedin_user=user)
+
+
+@app.route("/user/<int:user_id>", methods=["GET", "POST"])
+def profile(user_id):
+    """Show user profile with published podcasts"""                                   
+    logged_user_id = dict(session).get("logged_in_user", None)
+    user = User.query.filter_by(user_id=logged_user_id).first()
+    
+    if user:
+        to_see = User.query.get(user_id)
+        images = Image.query.filter_by(user_id=to_see.user_id, published=True)
+    else:
+        to_see = User.query.get(user_id)
+        images = Image.query.filter_by(user_id=to_see.user_id, published=True)
+
+    return render_template("profile.html", images=images, user=user, to_see=to_see)
+
+    
 @app.route("/logout")
 def logout():
     """Logout user."""

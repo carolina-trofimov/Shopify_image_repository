@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3 class="text-center" id="follow">Find Users</h3>
+
+<ul class="list-unstyled">
+    {% for user in users %}
+    <li class="col-md-4 offset-md-1 border-2 rounded">
+      <div class="row">
+        <div class="col-6 col-sm-8">
+          <a href="/user/{{user.user_id}}">{{ user.email }}</a>
+        </div>
+      </div>
+    </li>
+{% endfor %}
+</ul>
+
+
+{% endblock %}
