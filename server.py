@@ -215,10 +215,7 @@ def all_users():
         users = User.query.all()
     
     return render_template("users.html", users=users, loggedin_user=user)
-
-#   if user logged in, user doesn't apper on user list
-#   if user not logged in, see all users
-#   if return 200
+    
 
 @app.route("/user/<int:user_id>")
 def profile(user_id):
