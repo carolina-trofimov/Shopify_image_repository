@@ -37,6 +37,12 @@ Shopify image Repository is a full-stack web application that allows user to upl
 
 * ```$ python3 server.py ```
 
+## Run tests
+
+* Run all tests from the project directory
+
+* ```$ python3 -m pytest ```
+
 ## Author:
 
  **Carolina Trofimov**
