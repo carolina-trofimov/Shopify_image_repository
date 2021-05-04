@@ -26,7 +26,7 @@
               <button class="publish-btn btn btn-md" id="{{ image.image_id }}">{% if image.published %}Unpublish{% else %}Publish{% endif %}</button>
             </div>
           <div class="col-3 col-sm-3 offset-sm-1">
-            <form enctype="form-data" action="/image/{{image.image_id}}" method="DELETE">
+            <form enctype="form-data" action="/image/{{image.image_id}}" method="POST">
               <input type="hidden" name="delete-image" value="{{image.image_id}}">
               <button class="btn btn-md" href="/image/delete/image.image_id>">delete</button>
             </form>

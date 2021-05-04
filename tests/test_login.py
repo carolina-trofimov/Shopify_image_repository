@@ -1,6 +1,6 @@
 import pytest
 from model import db, User
-from helpers_test import assert_flashes, assert_redirect
+from helpers_tests import assert_flashes, assert_redirect
 
 def test_index(app, client):
     res = client.get('/')
@@ -47,6 +47,3 @@ def test_handle_success_login(app, client):
     res = client.post('/handle-login', data=dict(email="test@example.com", password="password"), follow_redirects=False)
     assert_flashes(client, "Login successful")
     assert_redirect(res, "http://localhost/upload")
-
-
-

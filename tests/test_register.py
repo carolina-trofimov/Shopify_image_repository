@@ -1,6 +1,6 @@
 import pytest
 from model import db, User
-from helpers_test import assert_flashes, assert_logged_in_user, assert_redirect
+from helpers_tests import assert_flashes, assert_logged_in_user, assert_redirect
 
 def test_register(app, client):
     res = client.get('/register')

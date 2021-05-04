@@ -35,11 +35,12 @@ def create_user(email="test@example.com", password="password"):
     db.session.commit()
     return user
 
-def create_image(name, path, for_user):
+def create_image(name, path, for_user, published=False):
     image = Image(
         name = name,
         s3_path = path,
-        user_id = for_user
+        user_id = for_user,
+        published = published
     )
     db.session.add(image)
     db.session.commit()

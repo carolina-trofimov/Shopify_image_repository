@@ -2,7 +2,7 @@
 {% block content %}
 
 
-<h3 class="text-center" id="profile">Welcome to {{to_see.email}}'s profile!</h3>
+<h3 class="text-center" id="profile">Welcome to {{user_to_visit.email}}'s profile!</h3>
 <ul class="list-unstyled">
   {% for image in images %}
   <div class="each-image">
@@ -10,8 +10,7 @@
         <div class="row">
           <div class="col-6 col-sm-3">
             <div class="image-name text-center">{{ image.name }}</div>
-              <img controls id="image">
-                <source src="{{image.s3_path}}">
+              <img src="{{image.s3_path}}" width="200" height="150">
               </img>
           </div>
         </div>

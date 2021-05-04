@@ -1,4 +1,4 @@
-from helpers_test import assert_redirect, assert_flashes, create_logged_in_user
+from helpers_tests import assert_redirect, assert_flashes, create_logged_in_user
 
 def test_logout_failure(app, client):
     res = client.get("/logout")

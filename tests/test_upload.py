@@ -1,4 +1,4 @@
-from helpers_test import create_logged_in_user, create_file_data, assert_redirect, assert_logged_in_user, assert_flashes
+from helpers_tests import create_logged_in_user, create_file_data, assert_redirect, assert_logged_in_user, assert_flashes
 
 
 def test_upload_failure(app, client):

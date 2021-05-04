@@ -62,7 +62,6 @@ def show_login_form():
     """Show login form."""
 
     return render_template("login.html")
-        
 
 @app.route("/handle-login", methods=["POST"])
 def login():
@@ -77,7 +76,7 @@ def login():
     if not password:
         flash("Password is required for login")
         return redirect("/login")
-
+    
     user = User.query.filter_by(email=email).first()
     if not user:
         flash("Incorrect Credentials")
@@ -178,7 +177,8 @@ def publish(image_id):
         db.session.commit()
         return jsonify({"status": "unpublished"})
 
-@app.route("/image/delete/<int:image_id>", methods=["DELETE"])
+
+@app.route("/image/delete/<int:image_id>", methods=["POST"])
 @login_required
 def delete_image(image_id):
     """Allow user to delete an image"""
@@ -195,43 +195,50 @@ def delete_image(image_id):
         return redirect("/")
 
     if user_id:
-        # And user can delete any image. How do we check that its the user's image?
         image = Image.query.filter_by(image_id=image_id).one()
         delete_from_db(image)
         delete_from_s3(image.name)
 
         return redirect("/my-images")
 
-@app.route("/users", methods=["POST", "GET"])
+
+@app.route("/users")
 def all_users():
     """Show list of users to follow"""
 
-    logged_user_id = dict(session).get("logged_in_user", None)
+    logged_user_id = session.get("logged_in_user")
     user = User.query.filter_by(user_id=logged_user_id).first()
-    if user:
-        users = User.query.filter(user.email != user.email).all()
 
+    if user:
+        users = User.query.filter(User.email != user.email).all()
     else:
         users = User.query.all()
     
     return render_template("users.html", users=users, loggedin_user=user)
 
+#   if user logged in, user doesn't apper on user list
+#   if user not logged in, see all users
+#   if return 200
 
-@app.route("/user/<int:user_id>", methods=["GET", "POST"])
+@app.route("/user/<int:user_id>")
 def profile(user_id):
     """Show user profile with published podcasts"""                                   
-    logged_user_id = dict(session).get("logged_in_user", None)
-    user = User.query.filter_by(user_id=logged_user_id).first()
     
-    if user:
-        to_see = User.query.get(user_id)
-        images = Image.query.filter_by(user_id=to_see.user_id, published=True)
-    else:
-        to_see = User.query.get(user_id)
-        images = Image.query.filter_by(user_id=to_see.user_id, published=True)
+    user_to_visit = User.query.get(user_id)
 
-    return render_template("profile.html", images=images, user=user, to_see=to_see)
+    if not user_to_visit:
+        flash("User doesn't exist")
+        print('no user')
+        return redirect("/")
 
+    images = Image.query.filter_by(user_id=user_to_visit.user_id, published=True).all()
+    if not images:
+        flash("User doesn't have any images")
+        print('no images')
+        return redirect("/")
+
+    return render_template("profile.html", images=images, user_to_visit=user_to_visit) 
+    
 
 @app.route("/logout")
 @login_required
@@ -242,7 +249,7 @@ def logout():
     flash("Logout successful")
 
     return redirect("/")
-
+     
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

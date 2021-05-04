@@ -1,4 +1,4 @@
-from helpers_test import assert_redirect, create_image, create_user, create_logged_in_user, assert_not_logged_in_user, assert_flashes, create_file_data
+from helpers_tests import assert_redirect, create_image, create_user, create_logged_in_user, assert_not_logged_in_user, assert_flashes, create_file_data
 
 
 def test_my_images_failure(app, client):
